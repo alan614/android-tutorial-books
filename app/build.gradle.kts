@@ -77,7 +77,8 @@ dependencies {
     //coroutine
     implementation(libs.kotlinx.coroutines.android)
 
-    implementation("com.squareup.okhttp3:logging-interceptor:3.9.0")
+    //navigation
+    implementation(libs.androidx.navigation.compose)
 
     testImplementation(libs.junit)
 

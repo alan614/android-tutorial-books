@@ -11,6 +11,7 @@ data class BookShelf(
 
 @Serializable
 data class Book(
+    val id: String,
     @SerialName(value = "selfLink")
     val link: String,
     @SerialName(value = "volumeInfo")
@@ -29,4 +30,8 @@ data class Info(
 data class ImageLinks(
     val smallThumbnail: String,
     val thumbnail: String,
+    val small: String? = null,
+    val medium: String? = null,
+    val large: String? = null,
+    val extraLarge: String? = null,
 )

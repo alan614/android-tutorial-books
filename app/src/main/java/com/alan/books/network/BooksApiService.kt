@@ -12,10 +12,10 @@ import retrofit2.http.Query
 
 interface BooksApiService {
     @GET("books/v1/volumes")
-    suspend fun getBooks(@Query(value = "q") query: String/*, @Query(value = "key") key: String = "AIzaSyDgHFvPhJwHuGaM9jwK3C2TUL94SKU4L-w"*/): BookShelf
+    suspend fun getBooks(@Query(value = "q") query: String): BookShelf
 
     @GET("books/v1/volumes/{id}")
-    suspend fun getBook(@Path(value = "id") id: String/*, @Query(value = "key") key: String = "AIzaSyDgHFvPhJwHuGaM9jwK3C2TUL94SKU4L-w"*/): Book
+    suspend fun getBook(@Path(value = "id") id: String): Book
 }
 
 private val baseUrl: String = "https://www.googleapis.com/";
