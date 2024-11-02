@@ -2,11 +2,18 @@ package com.alan.books.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -14,6 +21,7 @@ import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.alan.books.R
 import com.alan.books.data.BooksScreen
@@ -31,14 +39,35 @@ fun BooksApp(
     navHostController: NavHostController = rememberNavController(),
 ) {
 
+    val uiState by viewModel.uiState.collectAsState()
     val booksUiState = viewModel.booksUiState
     val viewBooksUiState = viewModel.viewBooksUiState
+
+    val backStackEntry by navHostController.currentBackStackEntryAsState()
+
+    val currentScreen = BooksScreen.valueOf(
+        backStackEntry?.destination?.route ?: BooksScreen.Home.name
+    )
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(text = stringResource(R.string.app_name))
+                },
+                navigationIcon = {
+                    if ( navHostController.previousBackStackEntry != null && uiState.screen != BooksScreen.Home) {
+                        IconButton(
+                            onClick = {
+                                navHostController.navigateUp()
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back",
+                            )
+                        }
+                    }
                 }
             )
         },
