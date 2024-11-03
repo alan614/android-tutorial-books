@@ -24,12 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.alan.books.R
 import com.alan.books.model.Book
 import com.alan.books.model.BookShelf
 import com.alan.books.model.ImageLinks
@@ -74,12 +76,21 @@ fun BookScreen(
             style = MaterialTheme.typography.titleLarge
         )
 
+        val imageLinks: ImageLinks? = book.info.imageLinks;
+
+        val imageUrl: String? = if (imageLinks?.large !== null) {
+            imageLinks.large
+        } else {
+            imageLinks?.medium
+        }
+
         AsyncImage(
             model = ImageRequest.Builder(context = LocalContext.current)
-                .data(book.info.imageLinks?.large?.replace("http", "https"))
+                .data(imageUrl?.replace("http", "https"))
                 .crossfade(true)
                 .build(),
-            contentDescription = book.info.title
+            contentDescription = book.info.title,
+            placeholder = painterResource(R.drawable.loading_img)
         )
 
         Text(
@@ -140,7 +151,7 @@ fun BookCard(
             //if (book.info.imageLinks !== null) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.width(128.dp).background(color = Color.Red)
+                modifier = Modifier.width(128.dp),
             ) {
                 if (book.info.imageLinks !== null) {
                     AsyncImage(
@@ -151,7 +162,8 @@ fun BookCard(
                             .build(),
                         contentDescription = book.info.description,
                         contentScale = ContentScale.FillWidth,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = painterResource(R.drawable.loading_img)
                     )
                 }
             }

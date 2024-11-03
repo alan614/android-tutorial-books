@@ -35,9 +35,11 @@ import com.alan.books.ui.screens.ViewBookUiState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BooksApp(
-    viewModel: BooksViewModel = viewModel(),
+    viewModel: BooksViewModel = viewModel(factory = BooksViewModel.Factory),
     navHostController: NavHostController = rememberNavController(),
 ) {
+
+    //val viewModel: BooksViewModel = viewModel(factory = BooksViewModel.Factory)
 
     val uiState by viewModel.uiState.collectAsState()
     val booksUiState = viewModel.booksUiState

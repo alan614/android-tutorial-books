@@ -11,14 +11,15 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface BooksApiService {
-    @GET("books/v1/volumes")
+    @GET("v1/volumes")
     suspend fun getBooks(@Query(value = "q") query: String): BookShelf
 
-    @GET("books/v1/volumes/{id}")
+    @GET("v1/volumes/{id}")
     suspend fun getBook(@Path(value = "id") id: String): Book
 }
+/*
 
-private val baseUrl: String = "https://www.googleapis.com/";
+private val baseUrl: String = "https://www.googleapis.com/books/";
 
 private val retrofit: Retrofit = Retrofit
     .Builder()
@@ -34,4 +35,4 @@ object BooksApi {
     val retrofitService: BooksApiService by lazy {
         retrofit.create(BooksApiService::class.java)
     }
-}
+}*/

@@ -5,12 +5,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.alan.books.BooksApplication
 import com.alan.books.data.BooksAppUiState
+import com.alan.books.data.BooksRepository
 import com.alan.books.data.BooksScreen
 import com.alan.books.model.Book
 import com.alan.books.model.BookShelf
-import com.alan.books.network.BooksApi
+//import com.alan.books.network.BooksApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,7 +37,9 @@ sealed interface ViewBookUiState{
     object Loading: ViewBookUiState
 }
 
-class BooksViewModel(): ViewModel() {
+class BooksViewModel(
+    private val booksRepository: BooksRepository
+): ViewModel() {
 
     var booksUiState: BooksUiState by mutableStateOf(BooksUiState.Loading)
         private set
@@ -49,10 +57,11 @@ class BooksViewModel(): ViewModel() {
     }
 
     fun getBooks(query: String) {
+        booksUiState = BooksUiState.Loading
         viewModelScope.launch {
-            booksUiState = BooksUiState.Loading
             booksUiState = try {
-                val result = BooksApi.retrofitService.getBooks(query = query)
+                //val result = BooksApi.retrofitService.getBooks(query = query)
+                val result = booksRepository.getBooks(query = query)
                 BooksUiState.Success(result)
             } catch (e: IOException) {
                 BooksUiState.Error
@@ -63,10 +72,11 @@ class BooksViewModel(): ViewModel() {
     }
 
     fun getBook(book: Book) {
+        viewBooksUiState = ViewBookUiState.Loading
         viewModelScope.launch {
-            viewBooksUiState = ViewBookUiState.Loading
             viewBooksUiState = try {
-                val result = BooksApi.retrofitService.getBook(book.id)
+                //val result = BooksApi.retrofitService.getBook(book.id)
+                val result = booksRepository.getBook(id = book.id)
                 ViewBookUiState.Success(result)
             } catch (e: IOException) {
                 ViewBookUiState.Error
@@ -108,6 +118,16 @@ class BooksViewModel(): ViewModel() {
                 screen = BooksScreen.Home,
                 book = null,
             )
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as BooksApplication)
+                val booksRepository = application.container.booksRepository
+                BooksViewModel(booksRepository = booksRepository)
+            }
         }
     }
 }
