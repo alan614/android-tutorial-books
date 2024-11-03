@@ -21,10 +21,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -73,7 +73,9 @@ fun BookScreen(
     ) {
         Text(
             text = book.info.title,
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(all = 8.dp),
         )
 
         val imageLinks: ImageLinks? = book.info.imageLinks;
@@ -90,12 +92,14 @@ fun BookScreen(
                 .crossfade(true)
                 .build(),
             contentDescription = book.info.title,
-            placeholder = painterResource(R.drawable.loading_img)
+            placeholder = painterResource(R.drawable.loading_img),
+            modifier = Modifier.padding(all = 8.dp),
         )
 
         Text(
             text = book.info.description,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(all = 8.dp),
         )
     }
 }
